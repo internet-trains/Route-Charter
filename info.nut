@@ -21,7 +21,7 @@
 require("version.nut");
 
 class FMainClass extends GSInfo {
-	function GetAuthor()		{ return "[Insert your name here]"; }
+	function GetAuthor()		{ return "rexrex600"; }
 	function GetName()			{ return "Open TTD Route Charter"; }
 	function GetDescription() 	{ return "Minimal GS is a Game Script boilerplate"; }
 	function GetVersion()		{ return SELF_VERSION; }
