@@ -17,3 +17,28 @@
  * Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
+
+class Town
+{
+    id = null;
+    charteree_id = null;
+
+    constructor()
+    {
+        this.id = id;
+        this.charteree_id=charteree_id;
+    }
+
+    function AssignCharteree(companyid);
+    function ID();
+}
+
+function Town::AssignCharteree(companyid)
+{
+    this.charteree_id = charteree_id;
+}
+
+function Town::ID()
+{
+    return this.id;
+}

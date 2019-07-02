@@ -69,8 +69,9 @@ class MainClass extends GSController
 		this._init_done = false;
 		this._loaded_data = null;
 		this._loaded_from_version = null;
-		this._town_list = null
 	}
+
+	function GetTowns();
 }
 
 /*
@@ -142,6 +143,7 @@ function MainClass::Init()
 		// or do whatever you like with the loaded data
 	} else {
 		// construct goals etc.
+		Print(this.GetTowns())
 	}
 
 	// Indicate that all data structures has been initialized/restored.
