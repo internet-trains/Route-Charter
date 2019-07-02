@@ -27,7 +27,7 @@ class FMainClass extends GSInfo {
 	function GetVersion()		{ return SELF_VERSION; }
 	function GetDate()			{ return "2013-11-05"; }
 	function CreateInstance()	{ return "MainClass"; }
-	function GetShortName()		{ return "MINI"; } // Replace this with your own unique 4 letter string
+	function GetShortName()		{ return "RTCH"; } // Replace this with your own unique 4 letter string
 	function GetAPIVersion()	{ return "1.2"; }
 	function GetURL()			{ return ""; }
 
