@@ -1,26 +1,24 @@
 /*
- * This file is part of Open TTD Route Charter, which is a GameScript for OpenTTD
+ * This file is part of MinimalGS, which is a GameScript for OpenTTD
  * Copyright (C) 2012-2013  Leif Linse
  *
- * Open TTD Route Charter is free software; you can redistribute it and/or modify it 
+ * MinimalGS is free software; you can redistribute it and/or modify it 
  * under the terms of the GNU General Public License as published by
  * the Free Software Foundation; version 2 of the License
  *
- * Open TTD Route Charter is distributed in the hope that it will be useful,
+ * MinimalGS is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Open TTD Route Charter; If not, see <http://www.gnu.org/licenses/> or
+ * along with MinimalGS; If not, see <http://www.gnu.org/licenses/> or
  * write to the Free Software Foundation, Inc., 51 Franklin Street, 
  * Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
 
 /** Import SuperLib for GameScript **/
-
-
 import("util.superlib", "SuperLib", 36);
 Result <- SuperLib.Result;
 Log <- SuperLib.Log;
@@ -30,9 +28,6 @@ Direction <- SuperLib.Direction;
 Town <- SuperLib.Town;
 Industry <- SuperLib.Industry;
 Story <- SuperLib.Story;
-
-
-
 // Additional SuperLib sub libraries can be found here:
 // http://dev.openttdcoop.org/projects/superlib/repository
 
@@ -70,8 +65,6 @@ class MainClass extends GSController
 		this._loaded_data = null;
 		this._loaded_from_version = null;
 	}
-
-	function GetTowns();
 }
 
 /*
@@ -143,7 +136,6 @@ function MainClass::Init()
 		// or do whatever you like with the loaded data
 	} else {
 		// construct goals etc.
-		Print(this.GetTowns())
 	}
 
 	// Indicate that all data structures has been initialized/restored.
@@ -203,7 +195,7 @@ function MainClass::Save()
 	// In case (auto-)save happens before we have initialized all data,
 	// save the raw _loaded_data if available or an empty table.
 	if (!this._init_done) {
-		return this._loaded_data ? this._loaded_data : {};
+		return this._loaded_data != null ? this._loaded_data : {};
 	}
 
 	return { 
@@ -229,9 +221,4 @@ function MainClass::Load(version, tbl)
 	}
 
 	this._loaded_from_version = version;
-}
-
-function MainClass::GetTowns()
-{
-	return GSTownList();
 }
