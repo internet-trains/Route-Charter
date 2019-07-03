@@ -2,6 +2,9 @@
 Note: When writing your own GS with Minimal GS as boilerplate you
 can of course erase this changelog and replace it with your own.
 
+Version 3:
+- Start of Route Chartering development
+
 Version 2:
 - Add: Provide EnfOfMonth and EndOfYear methods that get called from
   main loop every month/year
