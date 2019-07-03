@@ -1,7 +1,0 @@
-
-Note: When writing your own GS with Minimal GS as boilerplate you
-can of course erase this changelog and replace it with your own.
-
-Version 0.1:
-
-- Initial Prototype

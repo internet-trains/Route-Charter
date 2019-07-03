@@ -23,12 +23,12 @@ require("version.nut");
 class FMainClass extends GSInfo {
 	function GetAuthor()		{ return "rexrex600"; }
 	function GetName()			{ return "Open TTD Route Charter"; }
-	function GetDescription() 	{ return "Minimal GS is a Game Script boilerplate"; }
+	function GetDescription() 	{ return "Insert Description"; }
 	function GetVersion()		{ return SELF_VERSION; }
 	function GetDate()			{ return "2019-07-03"; }
 	function CreateInstance()	{ return "MainClass"; }
 	function GetShortName()		{ return "RTCH"; } // Replace this with your own unique 4 letter string
-	function GetAPIVersion()	{ return "1.2"; }
+	function GetAPIVersion()	{ return "1.9"; }
 	function GetURL()			{ return ""; }
 
 	function GetSettings() {

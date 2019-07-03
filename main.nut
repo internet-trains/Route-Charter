@@ -20,7 +20,7 @@
 
 /** Import SuperLib for GameScript **/
 
-/*
+
 import("util.superlib", "SuperLib", 36);
 Result <- SuperLib.Result;
 Log <- SuperLib.Log;
@@ -31,7 +31,7 @@ Town <- SuperLib.Town;
 Industry <- SuperLib.Industry;
 Story <- SuperLib.Story;
 
-*/
+
 
 // Additional SuperLib sub libraries can be found here:
 // http://dev.openttdcoop.org/projects/superlib/repository
