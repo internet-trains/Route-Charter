@@ -19,7 +19,7 @@
  */
 
 /** Import SuperLib for GameScript **/
-Import("util.superlib", "SuperLib", 36);
+import("util.superlib", "SuperLib", 36);
 Result <- SuperLib.Result;
 Log <- SuperLib.Log;
 Helper <- SuperLib.Helper;
@@ -65,8 +65,6 @@ class MainClass extends GSController
 		this._loaded_data = null;
 		this._loaded_from_version = null;
 	}
-
-	function GetTownList();
 }
 
 /*
@@ -138,7 +136,6 @@ function MainClass::Init()
 		// or do whatever you like with the loaded data
 	} else {
 		// construct goals etc.
-		print(this.GetTownList());
 	}
 
 	// Indicate that all data structures has been initialized/restored.
@@ -224,9 +221,4 @@ function MainClass::Load(version, tbl)
 	}
 
 	this._loaded_from_version = version;
-}
-
-function MainClass::GetTownList()
-{
-	return GSTownList();
 }
