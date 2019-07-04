@@ -144,7 +144,16 @@ function MainClass::Init()
 		// or do whatever you like with the loaded data
 	} else {
 		// construct goals etc.
-		print(this.GetTownList())
+		local TownList = this.GetTownList();
+		local a = TownList.Count();
+		print(""+a);
+		foreach(key, value in TownList){
+			print("Key: " + key + " Value: " + value);
+		}
+		local CompanyList = this.GetCompanyList();
+		foreach(value in CompanyList){
+			print(""+value+" "+GSCompany.GetName(value));
+		}
 	}
 
 	// Indicate that all data structures has been initialized/restored.
@@ -168,7 +177,8 @@ function MainClass::HandleEvents()
 				local company_id = company_event.GetCompanyID();
 
 				// Here you can welcome the new company
-				Story.ShowMessage(company_id, GSText(GSText.STR_WELCOME, company_id));
+				GSStoryPage.Show(GSStoryPage.New(company_id, GSText(GSText.STR_WELCOME, company_id)));
+				//GSStoryPage.Show(GSStoryPage.New(company_id, GSText("" + this.GetTownList(), company_id)));
 				break;
 			}
 
@@ -235,4 +245,16 @@ function MainClass::Load(version, tbl)
 function MainClass::GetTownList()
 {
 	return GSTownList();
+}
+
+function MainClass::GetCompanyList()
+{
+	local CompaniesList = [];
+	local id = 0;
+	for(id=0;id<16;id+=1){
+		if(GSCompany.ResolveCompanyID(id)!=GSCompany.COMPANY_INVALID){
+			CompaniesList.append(id);
+		}
+	}
+	return CompaniesList;
 }
