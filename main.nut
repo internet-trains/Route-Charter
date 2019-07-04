@@ -19,6 +19,8 @@
  */
 
 /** Import SuperLib for GameScript **/
+
+/*
 import("util.superlib", "SuperLib", 40);
 Result <- SuperLib.Result;
 Log <- SuperLib.Log;
@@ -28,6 +30,8 @@ Direction <- SuperLib.Direction;
 Town <- SuperLib.Town;
 Industry <- SuperLib.Industry;
 Story <- SuperLib.Story;
+*/
+
 // Additional SuperLib sub libraries can be found here:
 // http://dev.openttdcoop.org/projects/superlib/repository
 
@@ -65,6 +69,8 @@ class MainClass extends GSController
 		this._loaded_data = null;
 		this._loaded_from_version = null;
 	}
+
+	function GetTownList();
 }
 
 /*
@@ -82,7 +88,9 @@ function MainClass::Start()
 	// return object id 0 even if the created object has a different ID. 
 	// In that case, the easiest workaround is to delay Init until the 
 	// game has started.
-	if (Helper.HasWorldGenBug()) GSController.Sleep(1);
+
+	//Modified to remove dependence on remaining superlib modules etc.
+	GSController.Sleep(1);
 
 	this.Init();
 
@@ -136,6 +144,7 @@ function MainClass::Init()
 		// or do whatever you like with the loaded data
 	} else {
 		// construct goals etc.
+		print(this.GetTownList())
 	}
 
 	// Indicate that all data structures has been initialized/restored.
@@ -190,7 +199,7 @@ function MainClass::EndOfYear()
  */
 function MainClass::Save()
 {
-	Log.Info("Saving data to savegame", Log.LVL_INFO);
+	GSLog.Info("Saving data to savegame");
 
 	// In case (auto-)save happens before we have initialized all data,
 	// save the raw _loaded_data if available or an empty table.
@@ -210,7 +219,7 @@ function MainClass::Save()
  */
 function MainClass::Load(version, tbl)
 {
-	Log.Info("Loading data from savegame made with version " + version + " of the game script", Log.LVL_INFO);
+	GSLog.Info("Loading data from savegame made with version " + version + " of the game script");
 
 	// Store a copy of the table from the save game
 	// but do not process the loaded data yet. Wait with that to Init
@@ -221,4 +230,9 @@ function MainClass::Load(version, tbl)
 	}
 
 	this._loaded_from_version = version;
+}
+
+function MainClass::GetTownList()
+{
+	return GSTownList();
 }
