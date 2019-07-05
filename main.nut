@@ -47,11 +47,12 @@ Story <- SuperLib.Story;
 /** Import other source code files **/
 require("version.nut"); // get SELF_VERSION
 require("town.nut")
+require("company.nut")
 //require("some_file.nut");
 //..
 
 
-class MainClass extends GSController 
+class RouteCharterer extends GSController 
 {
 	_loaded_data = null;
 	_loaded_from_version = null;
@@ -62,7 +63,7 @@ class MainClass extends GSController
 	 * It is recommended to only do basic initialization of member variables
 	 * here.
 	 * Many API functions are unavailable from the constructor. Instead do
-	 * or call most of your initialization code from MainClass::Init.
+	 * or call most of your initialization code from RouteCharterer::Init.
 	 */
 	constructor()
 	{
@@ -74,6 +75,7 @@ class MainClass extends GSController
 	function GetTownList();
 	function GetCompanyList();
 	function PopulateTownAdjacencies(Town, TownList);
+	function OfferCharter(company);
 }
 
 /*
@@ -84,7 +86,7 @@ class MainClass extends GSController
  * Start() contains of two main parts. First initialization (which is
  * located in Init), and then the main loop.
  */
-function MainClass::Start()
+function RouteCharterer::Start()
 {
 	// Some OpenTTD versions are affected by a bug where all API methods
 	// that create things in the game world during world generation will
@@ -140,7 +142,7 @@ function MainClass::Start()
  * exist. The benefit of doing initialization in world gen is that commands
  * that alter the game world are much cheaper before the game starts.
  */
-function MainClass::Init()
+function RouteCharterer::Init()
 {
 	if (this._loaded_data != null) {
 		// Copy loaded data from this._loaded_data to this.*
@@ -185,7 +187,7 @@ function MainClass::Init()
 /*
  * This method handles incoming events from OpenTTD.
  */
-function MainClass::HandleEvents()
+function RouteCharterer::HandleEvents()
 {
 	if(GSEventController.IsEventWaiting()) {
 		local ev = GSEventController.GetNextEvent();
@@ -211,14 +213,14 @@ function MainClass::HandleEvents()
 /*
  * Called by our main loop when a new month has been reached.
  */
-function MainClass::EndOfMonth()
+function RouteCharterer::EndOfMonth()
 {
 }
 
 /*
  * Called by our main loop when a new year has been reached.
  */
-function MainClass::EndOfYear()
+function RouteCharterer::EndOfYear()
 {
 }
 
@@ -228,7 +230,7 @@ function MainClass::EndOfYear()
  * strings and booleans. Null values can also be stored. Class instances and
  * floating point values cannot be stored by OpenTTD.
  */
-function MainClass::Save()
+function RouteCharterer::Save()
 {
 	GSLog.Info("Saving data to savegame");
 
@@ -248,7 +250,7 @@ function MainClass::Save()
  * When a game is loaded, OpenTTD will call this method and pass you the
  * table that you sent to OpenTTD in Save().
  */
-function MainClass::Load(version, tbl)
+function RouteCharterer::Load(version, tbl)
 {
 	GSLog.Info("Loading data from savegame made with version " + version + " of the game script");
 
@@ -263,12 +265,19 @@ function MainClass::Load(version, tbl)
 	this._loaded_from_version = version;
 }
 
-function MainClass::GetTownList()
+/* 
+ * Function returns a GSTownList object of all towns on the map, however requires post processing 
+ * to get a list of town objects as defined in town.nut
+ */
+function RouteCharterer::GetTownList()
 {
 	return GSTownList();
 }
 
-function MainClass::GetCompanyList()
+/* 
+ * Function returns a squirrel table of (up to 15) companies on the map
+ */
+function RouteCharterer::GetCompanyList()
 {
 	local CompaniesList = {};
 	local id = 0;
@@ -280,11 +289,20 @@ function MainClass::GetCompanyList()
 	return CompaniesList;
 }
 
-function MainClass::PopulateTownAdjacencies(Town, TownList)
+/*
+ * Function takes a town object and the list of all town objects on the map and modifies town.adjacentTowns
+ * to contain references to every town which is adjacent to the town passed to the function
+ */
+function RouteCharterer::PopulateTownAdjacencies(Town, TownList)
 {
 	foreach(key, target in TownList){
 		if(((Town in target.adjacentTowns) || Town.IsTownAdjacent(target))&&(Town!=target)){
 			Town.adjacentTowns.append(target);
 		} 
 	}
+}
+
+function RouteCharterer::OfferCharter(company)
+{
+	//placeholder
 }
