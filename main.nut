@@ -18,64 +18,33 @@
  *
  */
 
-/** Import SuperLib for GameScript **/
-
-/*
-import("util.superlib", "SuperLib", 40);
-Result <- SuperLib.Result;
-Log <- SuperLib.Log;
-Helper <- SuperLib.Helper;
-Tile <- SuperLib.Tile;
-Direction <- SuperLib.Direction;
-Town <- SuperLib.Town;
-Industry <- SuperLib.Industry;
-Story <- SuperLib.Story;
-*/
-
-// Additional SuperLib sub libraries can be found here:
-// http://dev.openttdcoop.org/projects/superlib/repository
-
-/** Import other libs **/
-// There are several other libraries for Game Scripts out there. Check out
-// http://bananas.openttd.org/en/gslibrary/ for an up to date list.
-//
-// Remember to set dependencies in the bananas web manager for all libraries
-// that you use. This way users will automatically get all libraries of the
-// version you selected when they download your Game Script.
-
-
 /** Import other source code files **/
 require("version.nut"); // get SELF_VERSION
-require("town.nut")
-require("company.nut")
-//require("some_file.nut");
+require("routecharter.nut");
 //..
 
 
-class RouteCharterer extends GSController 
+class MainClass extends GSController 
 {
 	_loaded_data = null;
 	_loaded_from_version = null;
 	_init_done = null;
+	RC = null;
 
 	/*
 	 * This method is called when your GS is constructed.
 	 * It is recommended to only do basic initialization of member variables
 	 * here.
 	 * Many API functions are unavailable from the constructor. Instead do
-	 * or call most of your initialization code from RouteCharterer::Init.
+	 * or call most of your initialization code from MainClass::Init.
 	 */
 	constructor()
 	{
 		this._init_done = false;
 		this._loaded_data = null;
 		this._loaded_from_version = null;
+		this.RC = null;
 	}
-
-	function GetTownList();
-	function GetCompanyList();
-	function PopulateTownAdjacencies(Town, TownList);
-	function OfferCharter(company);
 }
 
 /*
@@ -86,7 +55,7 @@ class RouteCharterer extends GSController
  * Start() contains of two main parts. First initialization (which is
  * located in Init), and then the main loop.
  */
-function RouteCharterer::Start()
+function MainClass::Start()
 {
 	// Some OpenTTD versions are affected by a bug where all API methods
 	// that create things in the game world during world generation will
@@ -142,41 +111,14 @@ function RouteCharterer::Start()
  * exist. The benefit of doing initialization in world gen is that commands
  * that alter the game world are much cheaper before the game starts.
  */
-function RouteCharterer::Init()
+function MainClass::Init()
 {
 	if (this._loaded_data != null) {
 		// Copy loaded data from this._loaded_data to this.*
 		// or do whatever you like with the loaded data
 	} else {
 		// construct goals etc.
-		local TownList = {};
-		
-		foreach(key, value in this.GetTownList()){
-			GSLog.Info("Key: " + key + " Value: " + value);
-			TownList[key] <- Town(key, GSTown.GetName(key), GSTown.GetLocation(key));
-		}
-
-		/*
-		foreach(key, value in TownList){
-			GSLog.Info("Key: " + key + " Name: " + value.name + " Location: " + value.tile);
-		}
-
-		local CompanyList = this.GetCompanyList();
-
-		foreach(value in CompanyList){
-			GSLog.Info(""+value+" "+GSCompany.GetName(value));
-		}
-		*/
-
-		this.PopulateTownAdjacencies(TownList[0], TownList);
-		
-		GSLog.Info("There are " + TownList.len() + " towns, and " + TownList[0].adjacentTowns.len() + " are within " + GSController.GetSetting("adjacency_radius") + " tiles of " + TownList[0].name);
-		GSLog.Info(TownList[0].name + " is adjacent to:");
-		foreach(town in TownList[0].adjacentTowns){
-			GSLog.Info(town.name);
-		}
-		//GSLog.Info(this.GetTownNameByID(0))
-
+		this.RC = RouteCharter();
 	}
 
 	// Indicate that all data structures has been initialized/restored.
@@ -187,7 +129,7 @@ function RouteCharterer::Init()
 /*
  * This method handles incoming events from OpenTTD.
  */
-function RouteCharterer::HandleEvents()
+function MainClass::HandleEvents()
 {
 	if(GSEventController.IsEventWaiting()) {
 		local ev = GSEventController.GetNextEvent();
@@ -196,12 +138,13 @@ function RouteCharterer::HandleEvents()
 		local ev_type = ev.GetEventType();
 		switch (ev_type) {
 			case GSEvent.ET_COMPANY_NEW: {
+				
+				this.RC.UpdateCompanyList()
 				local company_event = GSEventCompanyNew.Convert(ev);
 				local company_id = company_event.GetCompanyID();
 
 				// Here you can welcome the new company
 				GSStoryPage.Show(GSStoryPage.New(company_id, GSText(GSText.STR_WELCOME, company_id)));
-				//GSStoryPage.Show(GSStoryPage.New(company_id, GSText("" + this.GetTownList(), company_id)));
 				break;
 			}
 
@@ -213,14 +156,15 @@ function RouteCharterer::HandleEvents()
 /*
  * Called by our main loop when a new month has been reached.
  */
-function RouteCharterer::EndOfMonth()
+function MainClass::EndOfMonth()
 {
+	RC.MonthlyUpdate();
 }
 
 /*
  * Called by our main loop when a new year has been reached.
  */
-function RouteCharterer::EndOfYear()
+function MainClass::EndOfYear()
 {
 }
 
@@ -230,7 +174,7 @@ function RouteCharterer::EndOfYear()
  * strings and booleans. Null values can also be stored. Class instances and
  * floating point values cannot be stored by OpenTTD.
  */
-function RouteCharterer::Save()
+function MainClass::Save()
 {
 	GSLog.Info("Saving data to savegame");
 
@@ -250,7 +194,7 @@ function RouteCharterer::Save()
  * When a game is loaded, OpenTTD will call this method and pass you the
  * table that you sent to OpenTTD in Save().
  */
-function RouteCharterer::Load(version, tbl)
+function MainClass::Load(version, tbl)
 {
 	GSLog.Info("Loading data from savegame made with version " + version + " of the game script");
 
@@ -263,46 +207,4 @@ function RouteCharterer::Load(version, tbl)
 	}
 
 	this._loaded_from_version = version;
-}
-
-/* 
- * Function returns a GSTownList object of all towns on the map, however requires post processing 
- * to get a list of town objects as defined in town.nut
- */
-function RouteCharterer::GetTownList()
-{
-	return GSTownList();
-}
-
-/* 
- * Function returns a squirrel table of (up to 15) companies on the map
- */
-function RouteCharterer::GetCompanyList()
-{
-	local CompaniesList = {};
-	local id = 0;
-	for(id=0;id<16;id+=1){
-		if(GSCompany.ResolveCompanyID(id)!=GSCompany.COMPANY_INVALID){
-			CompaniesList[id] <- 0;
-		}
-	}
-	return CompaniesList;
-}
-
-/*
- * Function takes a town object and the list of all town objects on the map and modifies town.adjacentTowns
- * to contain references to every town which is adjacent to the town passed to the function
- */
-function RouteCharterer::PopulateTownAdjacencies(Town, TownList)
-{
-	foreach(key, target in TownList){
-		if(((Town in target.adjacentTowns) || Town.IsTownAdjacent(target))&&(Town!=target)){
-			Town.adjacentTowns.append(target);
-		} 
-	}
-}
-
-function RouteCharterer::OfferCharter(company)
-{
-	//placeholder
 }

@@ -2,8 +2,8 @@ import os
 import shutil
 import subprocess
 
-OTTDScript = "..\\OpenTTD\\game\\ORC"
-OwnPath = "..\\ORC"
+OTTDScript = "..\\OpenTTD\\game\\Route-Charter"
+OwnPath = "..\\Route-Charter"
 
 SqrFiles = [i for i in os.listdir() if ".nut" in i]
 print(os.listdir("lang"))
