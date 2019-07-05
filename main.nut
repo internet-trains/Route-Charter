@@ -46,6 +46,7 @@ Story <- SuperLib.Story;
 
 /** Import other source code files **/
 require("version.nut"); // get SELF_VERSION
+require("town.nut")
 //require("some_file.nut");
 //..
 
@@ -72,6 +73,7 @@ class MainClass extends GSController
 
 	function GetTownList();
 	function GetCompanyList();
+	function PopulateTownAdjacencies(Town, TownList);
 }
 
 /*
@@ -149,11 +151,11 @@ function MainClass::Init()
 		
 		foreach(key, value in this.GetTownList()){
 			GSLog.Info("Key: " + key + " Value: " + value);
-			TownList[key] <- GSTown.GetName(key);
+			TownList[key] <- Town(key, GSTown.GetName(key), GSTown.GetLocation(key));
 		}
 
 		foreach(key, value in TownList){
-			GSLog.Info("Key: " + key + " Name: " + value);
+			GSLog.Info("Key: " + key + " Name: " + value.name + " Location: " + value.tile);
 		}
 
 		local CompanyList = this.GetCompanyList();
@@ -162,8 +164,10 @@ function MainClass::Init()
 			GSLog.Info(""+value+" "+GSCompany.GetName(value));
 		}
 
+		this.PopulateTownAdjacencies(TownList[0], TownList);
 		
-
+		GSLog.Info("There are " + TownList.len() + " towns, and " + TownList[0].adjacentTowns.len() + " are within " + GSController.GetSetting("adjacency_radius") + " tiles of " + TownList[0].name);
+		
 		//GSLog.Info(this.GetTownNameByID(0))
 
 	}
@@ -269,4 +273,13 @@ function MainClass::GetCompanyList()
 		}
 	}
 	return CompaniesList;
+}
+
+function MainClass::PopulateTownAdjacencies(Town, TownList)
+{
+	foreach(key, target in TownList){
+		if(((Town in target.adjacentTowns) || Town.IsTownAdjacent(target))&&(Town!=target)){
+			Town.adjacentTowns.append(target);
+		} 
+	}
 }
