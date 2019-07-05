@@ -32,9 +32,7 @@ class FMainClass extends GSInfo {
 	function GetURL()			{ return ""; }
 
 	function GetSettings() {
-		AddSetting({name = "log_level", description = "Debug: Log level (higher = print more)", easy_value = 3, medium_value = 3, hard_value = 3, custom_value = 3, flags = CONFIG_INGAME, min_value = 1, max_value = 3});
-		AddLabels("log_level", {_1 = "1: Info", _2 = "2: Verbose", _3 = "3: Debug" } );
-		AddSetting({name = "adjacency_radius", description = "How far away should the script look when allocating city pairs for charters? (uses manhattan aka taxi cab distance)", easy_value = 500, medium_value = 500, hard_value = 500, custom_value = 500, flags = CONFIG_INGAME, min_value = 250, max_value = 1000});
+		AddSetting({name = "adjacency_radius", description = "How far away should the script look when allocating city pairs for charters? (uses manhattan aka taxi cab distance)", easy_value = 250, medium_value = 250, hard_value = 250, custom_value = 250, flags = CONFIG_INGAME, min_value = 50, max_value = 1000});
 	}
 }
 

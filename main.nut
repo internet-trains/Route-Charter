@@ -154,6 +154,7 @@ function MainClass::Init()
 			TownList[key] <- Town(key, GSTown.GetName(key), GSTown.GetLocation(key));
 		}
 
+		/*
 		foreach(key, value in TownList){
 			GSLog.Info("Key: " + key + " Name: " + value.name + " Location: " + value.tile);
 		}
@@ -163,11 +164,15 @@ function MainClass::Init()
 		foreach(value in CompanyList){
 			GSLog.Info(""+value+" "+GSCompany.GetName(value));
 		}
+		*/
 
 		this.PopulateTownAdjacencies(TownList[0], TownList);
 		
 		GSLog.Info("There are " + TownList.len() + " towns, and " + TownList[0].adjacentTowns.len() + " are within " + GSController.GetSetting("adjacency_radius") + " tiles of " + TownList[0].name);
-		
+		GSLog.Info(TownList[0].name + " is adjacent to:");
+		foreach(town in TownList[0].adjacentTowns){
+			GSLog.Info(town.name);
+		}
 		//GSLog.Info(this.GetTownNameByID(0))
 
 	}
