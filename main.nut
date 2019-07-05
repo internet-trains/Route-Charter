@@ -71,6 +71,7 @@ class MainClass extends GSController
 	}
 
 	function GetTownList();
+	function GetCompanyList();
 }
 
 /*
@@ -144,16 +145,27 @@ function MainClass::Init()
 		// or do whatever you like with the loaded data
 	} else {
 		// construct goals etc.
-		local TownList = this.GetTownList();
-		local a = TownList.Count();
-		print(""+a);
+		local TownList = {};
+		
+		foreach(key, value in this.GetTownList()){
+			GSLog.Info("Key: " + key + " Value: " + value);
+			TownList[key] <- GSTown.GetName(key);
+		}
+
 		foreach(key, value in TownList){
-			print("Key: " + key + " Value: " + value);
+			GSLog.Info("Key: " + key + " Name: " + value);
 		}
+
 		local CompanyList = this.GetCompanyList();
+
 		foreach(value in CompanyList){
-			print(""+value+" "+GSCompany.GetName(value));
+			GSLog.Info(""+value+" "+GSCompany.GetName(value));
 		}
+
+		
+
+		//GSLog.Info(this.GetTownNameByID(0))
+
 	}
 
 	// Indicate that all data structures has been initialized/restored.
@@ -249,11 +261,11 @@ function MainClass::GetTownList()
 
 function MainClass::GetCompanyList()
 {
-	local CompaniesList = [];
+	local CompaniesList = {};
 	local id = 0;
 	for(id=0;id<16;id+=1){
 		if(GSCompany.ResolveCompanyID(id)!=GSCompany.COMPANY_INVALID){
-			CompaniesList.append(id);
+			CompaniesList[id] <- 0;
 		}
 	}
 	return CompaniesList;
