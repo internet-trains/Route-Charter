@@ -8,11 +8,11 @@ class Town
 
     constructor(id, name, tile)
     {
-        this.id = id;
-        this.name = name;
-        this.company = null;
-        this.adjacentTowns = [];
-        this.tile = tile;
+        this.id = id;               //int?
+        this.name = name;           //string
+        this.company = null;        //A Company object
+        this.adjacentTowns = [];    //A list of Town objects
+        this.tile = tile;           //TileIndex
     } 
 
     function IsTownAdjacent(town);
