@@ -102,8 +102,9 @@ function RouteCharter::OfferCharter(company, towns)
 function RouteCharter::StartCharter(charterID)
 {
     GSLog.Info("Starting Charter ID " + charterID);
-    this.CharterList[charterID] <- this.OfferedCharters[charterID];
     GSGoal.CloseQuestion(charterID);        // Close the question for all clients in the company once one client has responded
+    this.CharterList[charterID] <- this.OfferedCharters[charterID];
+    this.CharterList[charterID].CreateGoal();
 }
 
 function RouteCharter::MonthlyUpdate()

@@ -1,2 +1,3 @@
 STR_WELCOME    :Hello {COMPANY}!{}{}You are playing a game with Minimal GS - a boilerplate for GS authors.
 STR_CHARTER_QUERY   :You have been offered a charter between {TOWN} and {TOWN}.
+STR_CHARTER_GOAL    :Provide a charter service between {TOWN} and {TOWN}.
