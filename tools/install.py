@@ -3,7 +3,8 @@ import shutil
 import subprocess
 
 OTTDScript = "..\\OpenTTD\\game\\Route-Charter"
-OwnPath = "..\\Route-Charter"
+SrcPath = "..\\Route-Charter\\src"
+LangPath = "..\\Route-Charter\\lang"
 
 SqrFiles = [i for i in os.listdir() if ".nut" in i]
 print(os.listdir("lang"))
@@ -14,12 +15,12 @@ subprocess.call("md "+OTTDScript+"\\lang", shell=True)
 
 for i in SqrFiles:
     print("copying " + i)
-    shutil.copy(OwnPath + "\\" + i, OTTDScript)
+    shutil.copy(SrcPath + "\\" + i, OTTDScript)
 
 subprocess.call("cd lang", shell=True)
 
 for i in LangFiles:
     print("copying " + i)
-    shutil.copy(OwnPath + "\\lang\\" + i, OTTDScript + "\\lang")
+    shutil.copy(LangPath + "\\" + i, OTTDScript + "\\lang")
 
 print("All files copied")

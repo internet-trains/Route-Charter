@@ -2,18 +2,23 @@
 /** Import other source files **/
 require("town.nut")
 require("company.nut")
+require("charter.nut")
 
 class RouteCharter
 {
     TownList = {};
     CompanyList = {};
+    CharterList = {};
+    OfferedCharters = {};
+    offerID=null;
     
     function GetTownList();
 	function GetCompanyList();
 	function UpdateCompanyList(companyList);
 	function PopulateTownAdjacencies(Town, TownList);
-	function OfferCharter(company);
+	function OfferCharter(company, towns);
     function MonthlyUpdate();
+    function StartCharter(charterID);
 
     constructor()
     {
@@ -22,6 +27,9 @@ class RouteCharter
             PopulateTownAdjacencies(town, this.TownList);
 
         this.CompanyList = GetCompanyList();
+        this.CharterList = {};
+        this.OfferedCharters = {};
+        this.offerID = 0;
         }
     }
 }
@@ -82,16 +90,25 @@ function RouteCharter::PopulateTownAdjacencies(Town, TownList)
 	}
 }
 
-function RouteCharter::OfferCharter(company)
+function RouteCharter::OfferCharter(company, towns)
 {
-	//placeholder
+	this.OfferedCharters[offerID] <- Charter(towns, company, this.offerID);
+    local CharterQuery = GSText(GSText.STR_CHARTER_QUERY, towns[0].id, towns[1].id);
+    GSLog.Info("Offering Charter ID " + this.offerID);
+    GSGoal.Question(this.offerID, company.id, CharterQuery, GSGoal.QT_QUESTION, GSGoal.BUTTON_ACCEPT+GSGoal.BUTTON_DECLINE);
+    this.offerID += 1;
 }
 
+function RouteCharter::StartCharter(charterID)
+{
+    GSLog.Info("Starting Charter ID " + charterID);
+    this.CharterList[charterID] <- this.OfferedCharters[charterID];
+}
 
 function RouteCharter::MonthlyUpdate()
 {
     foreach(key, company in this.CompanyList){
         company.UpdateHQLocation();
-        GSLog.Info(company.hqTile);
+        GSLog.Info(company.name + " " + company.hqTile);
     }
 }
