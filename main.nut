@@ -119,6 +119,7 @@ function MainClass::Init()
 	} else {
 		// construct goals etc.
 		this.RC = RouteCharter();
+		this.RC.OfferCharter(RC.CompanyList[0], [RC.TownList[0], RC.TownList[0].adjacentTowns[0]])
 	}
 
 	// Indicate that all data structures has been initialized/restored.
@@ -146,6 +147,11 @@ function MainClass::HandleEvents()
 				// Here you can welcome the new company
 				GSStoryPage.Show(GSStoryPage.New(company_id, GSText(GSText.STR_WELCOME, company_id)));
 				break;
+			} case GSEvent.ET_GOAL_QUESTION_ANSWER: {
+				local answer_event = GSEventGoalQuestionAnswer.Convert(ev);
+				if(answer_event.GetButton()==GSGoal.BUTTON_ACCEPT){
+					this.RC.StartCharter(answer_event.GetUniqueID());
+				}
 			}
 
 			// other events ...
@@ -158,7 +164,7 @@ function MainClass::HandleEvents()
  */
 function MainClass::EndOfMonth()
 {
-	RC.MonthlyUpdate();
+	this.RC.MonthlyUpdate();
 }
 
 /*
