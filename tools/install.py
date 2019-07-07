@@ -7,7 +7,6 @@ SrcPath = "..\\Route-Charter\\src"
 LangPath = "..\\Route-Charter\\lang"
 
 SqrFiles = [i for i in os.listdir("src") if ".nut" in i]
-print(os.listdir("lang"))
 LangFiles = [i for i in os.listdir("lang") if ".txt" in i]
 
 subprocess.call("md "+OTTDScript, shell=True)
