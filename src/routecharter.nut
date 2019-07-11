@@ -95,6 +95,8 @@ function RouteCharter::OfferCharter(company, towns)
 	this.OfferedCharters[offerID] <- Charter(towns, company, this.offerID);
     local CharterQuery = GSText(GSText.STR_CHARTER_QUERY, towns[0].id, towns[1].id);
     GSLog.Info("Offering Charter ID " + this.offerID);
+    GSLog.Info(company.id + " : " + company.name);
+    GSLog.Info(GSCompany.ResolveCompanyID(company.id))
     GSGoal.Question(this.offerID, company.id, CharterQuery, GSGoal.QT_QUESTION, GSGoal.BUTTON_ACCEPT+GSGoal.BUTTON_DECLINE);
     this.offerID += 1;
 }
@@ -111,6 +113,17 @@ function RouteCharter::MonthlyUpdate()
 {
     foreach(key, company in this.CompanyList){
         company.UpdateHQLocation();
-        GSLog.Info(company.name + " " + company.hqTile);
     }
+
+    foreach(key, town in this.TownList){
+        town.UpdateStations();
+    }
+    
+    foreach(key, charter in this.CharterList){
+        charter.CheckFulfilled();
+    }
+
+    local stations = this.TownList[0].GetStationsInTown(10);
+
+    GSLog.Info(TownList[0].name);
 }

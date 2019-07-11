@@ -22,7 +22,7 @@ require("version.nut");
 
 class FMainClass extends GSInfo {
 	function GetAuthor()		{ return "rexrex600"; }
-	function GetName()			{ return "Open TTD Route Chartering"; }
+	function GetName()			{ return "Route Charter"; }
 	function GetDescription() 	{ return "<Insert Description>"; }
 	function GetVersion()		{ return SELF_VERSION; }
 	function GetDate()			{ return "2019-07-03"; }
@@ -33,6 +33,7 @@ class FMainClass extends GSInfo {
 
 	function GetSettings() {
 		AddSetting({name = "adjacency_radius", description = "How far away should the script look when allocating city pairs for charters? (uses manhattan aka taxi cab distance)", easy_value = 250, medium_value = 250, hard_value = 250, custom_value = 250, flags = CONFIG_INGAME, min_value = 50, max_value = 1000});
+		AddSetting({name = "charter_length_to_require_direct_routes", description = "at what distance should it cease to be a requirement that routes between two towns specified by a charter are direct?", easy_value = 256, medium_value = 256, hard_value = 256, custom_value = 256, flags = CONFIG_INGAME, min_value = 1, max_value = 1000});
 	}
 }
 

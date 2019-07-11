@@ -5,6 +5,13 @@ class Town
     company = null;
     adjacentTowns = null;
     tile = null;
+    stations = null;
+
+    function GetStationsInTown(radius);
+    function IsTownAdjacent(town);
+    function GetTilesInTown(radius);
+    function FilterPassengerStations(stationList);
+    function UpdateStations();
 
     constructor(id, name, tile)
     {
@@ -13,11 +20,8 @@ class Town
         this.company = null;        //A Company object
         this.adjacentTowns = [];    //A list of Town objects
         this.tile = tile;           //TileIndex
+        this.stations = this.FilterPassengerStations();
     } 
-
-    function IsTownAdjacent(town);
-    function getStationsInTown(radius);
-    function getTilesInTown(radius);
 }
 
 function Town::IsTownAdjacent(town)
@@ -29,15 +33,15 @@ function Town::IsTownAdjacent(town)
     }
 }
 
-function Town::getStationsInTown(radius)
+function Town::GetStationsInTown(radius)
 {
-    local tiles = getStationsInTown(radius);
-    local stations = [];
+    local tiles = GetTilesInTown(radius);
+    local stations = {};
     local stationID = 0;
     foreach(tile in tiles){
         stationID=GSStation.GetStationID(tile)
-        if((stationID!=0)&&!(stationID in stations)){
-            stations.append(stationID);
+        if(GSStation.IsValidStation(stationID)){
+            stations[stationID] <- 0;
         }
         stationID=0;
     }
@@ -48,7 +52,7 @@ function Town::getStationsInTown(radius)
  * returns a list of tiles in a radius*radius square around the centre of
  * the given town
  */
-function Town::getTilesInTown(radius)
+function Town::GetTilesInTown(radius)
 {
     local tiles = [];
     local i = 0;
@@ -60,3 +64,22 @@ function Town::getTilesInTown(radius)
     }
     return tiles;
 }
+
+function Town::FilterPassengerStations()
+{
+    local stations = GetStationsInTown(25)
+    local newStations = {}
+    foreach(key, station in stations){
+        local AcceptedCargos = GSCargoList_StationAccepting(key);
+        if(AcceptedCargos.HasItem(0)){
+            newStations[key] <- GSBaseStation.GetName(key);
+        }
+    }
+    return newStations;
+}
+
+function Town::UpdateStations()
+{
+    this.stations = FilterPassengerStations();
+}
+
