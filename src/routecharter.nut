@@ -13,12 +13,16 @@ class RouteCharter
     offerID=null;
     
     function GetTownList();
+    function PopulateTownAdjacencies(Town, TownList);
+
 	function GetCompanyList();
 	function UpdateCompanyList(companyList);
-	function PopulateTownAdjacencies(Town, TownList);
+
 	function OfferCharter(company, towns);
-    function MonthlyUpdate();
     function StartCharter(charterID);
+
+    function MonthlyUpdate();
+    function AnnualUpdate();
 
     constructor()
     {
@@ -127,3 +131,4 @@ function RouteCharter::MonthlyUpdate()
 
     GSLog.Info(TownList[0].name);
 }
+
