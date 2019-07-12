@@ -2,7 +2,7 @@ import os
 import shutil
 import subprocess
 
-OTTDScript = "..\\openttd-custom-jgrpp-0.31.2-MINGW-win64\\game\\Route-Charter"
+OTTDScript = "..\\OpenTTD\\game\\Route-Charter"
 SrcPath = "..\\Route-Charter\\src"
 LangPath = "..\\Route-Charter\\lang"
 

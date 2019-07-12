@@ -119,7 +119,6 @@ function MainClass::Init()
 	} else {
 		// construct goals etc.
 		this.RC = RouteCharter();
-		this.RC.OfferCharter(this.RC.CompanyList[0], [this.RC.TownList[0], this.RC.TownList[0].adjacentTowns[0]]);
 	}
 
 	// Indicate that all data structures has been initialized/restored.
@@ -172,6 +171,7 @@ function MainClass::EndOfMonth()
  */
 function MainClass::EndOfYear()
 {
+	RC.AnnualUpdate();
 }
 
 /*

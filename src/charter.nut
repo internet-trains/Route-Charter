@@ -1,4 +1,22 @@
-require("utils.nut");
+/*
+ * This file is part of Open TTD Route Chartering, which is a GameScript for OpenTTD
+ * Copyright (C) 2012-2013  Leif Linse
+ *
+ * Open TTD Route Chartering is free software; you can redistribute it and/or modify it 
+ * under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2 of the License
+ *
+ * Open TTD Route Chartering is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Open TTD Route Chartering; If not, see <http://www.gnu.org/licenses/> or
+ * write to the Free Software Foundation, Inc., 51 Franklin Street, 
+ * Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ */
 
 class Charter
 {
@@ -60,11 +78,11 @@ function Charter::IsFulfilledDirect()
 
 function Charter::IsFulfilledIndirect()
 {
-    local.isFulfilled = false;
+    local isFulfilled = false;
     foreach(key, value in this.towns[0].stations){
         local destinationList = GSStationList_CargoPlannedByFrom(key, 0);
         foreach(key, value in destinationList){
-            if(key, in this.towns[1].stations){
+            if(key in this.towns[1].stations){
                 isFulfilled = true;
             }
         }

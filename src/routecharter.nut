@@ -1,8 +1,28 @@
+/*
+ * This file is part of Open TTD Route Chartering, which is a GameScript for OpenTTD
+ * Copyright (C) 2012-2013  Leif Linse
+ *
+ * Open TTD Route Chartering is free software; you can redistribute it and/or modify it 
+ * under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 2 of the License
+ *
+ * Open TTD Route Chartering is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Open TTD Route Chartering; If not, see <http://www.gnu.org/licenses/> or
+ * write to the Free Software Foundation, Inc., 51 Franklin Street, 
+ * Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ */
 
 /** Import other source files **/
 require("town.nut")
 require("company.nut")
 require("charter.nut")
+require("random.nut")
 
 class RouteCharter
 {
@@ -17,8 +37,10 @@ class RouteCharter
 
 	function GetCompanyList();
 	function UpdateCompanyList(companyList);
+    function GetCompanyHQTown(company);
 
-	function OfferCharter(company, towns);
+	function GenerateCharter();
+    function OfferCharter(company, towns);
     function StartCharter(charterID);
 
     function MonthlyUpdate();
@@ -111,12 +133,16 @@ function RouteCharter::StartCharter(charterID)
     GSGoal.CloseQuestion(charterID);        // Close the question for all clients in the company once one client has responded
     this.CharterList[charterID] <- this.OfferedCharters[charterID];
     this.CharterList[charterID].CreateGoal();
+    this.CharterList[charterID].company.Charters[charterID] <- this.OfferedCharters[charterID];
 }
 
 function RouteCharter::MonthlyUpdate()
 {
     foreach(key, company in this.CompanyList){
-        company.UpdateHQLocation();
+        if(company.GetHQLocation()!=65535){ 
+            company.hqTown = TownList[company.GetHQLocation()]
+        } 
+        company.GetServedTowns();
     }
 
     foreach(key, town in this.TownList){
@@ -126,9 +152,20 @@ function RouteCharter::MonthlyUpdate()
     foreach(key, charter in this.CharterList){
         charter.CheckFulfilled();
     }
-
-    local stations = this.TownList[0].GetStationsInTown(10);
-
-    GSLog.Info(TownList[0].name);
 }
 
+function RouteCharter::AnnualUpdate()
+{
+    this.GenerateCharters();
+}
+
+function RouteCharter::GenerateCharters()
+{  
+    foreach(key, company in CompanyList){
+        if(company.ServedTowns.len()!=0){
+            local TownA = company.ServedTowns[Random.RandomAccessGSList(company.ServedTowns)];
+            local TownB = TownA.adjacentTowns[Random.RandomAccessGSList(TownA.adjacentTowns)];
+            this.OfferCharter(company, [TownA, TownB])
+        }
+    }   
+}
