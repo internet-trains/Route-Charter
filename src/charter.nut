@@ -65,10 +65,10 @@ function Charter::CreateGoal()
 function Charter::IsFulfilledDirect()
 {
     local isFulfilled = false;
-    foreach(key, value in this.towns[0].stations){
+    foreach((key, value in this.towns[0].stations) && (GSStation.GetOwner(key) == this.company)){
         local destinationList = GSStationList_CargoPlannedByVia(key, 0);
         foreach(key, value in destinationList){
-            if(key in this.towns[1].stations){
+            if((key in this.towns[1].stations) && (GSStation.GetOwner(key) == this.company) ){
                 isFulfilled = true;
             }
         }
@@ -79,10 +79,10 @@ function Charter::IsFulfilledDirect()
 function Charter::IsFulfilledIndirect()
 {
     local isFulfilled = false;
-    foreach(key, value in this.towns[0].stations){
+    foreach((key, value in this.towns[0].stations) && (GSStation.GetOwner(key) == this.company)){
         local destinationList = GSStationList_CargoPlannedByFrom(key, 0);
         foreach(key, value in destinationList){
-            if(key in this.towns[1].stations){
+            if((key in this.towns[1].stations) && (GSStation.GetOwner(key) == this.company)){
                 isFulfilled = true;
             }
         }
